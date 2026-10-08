@@ -1,9 +1,9 @@
 ---
 - name: Test Ansible on the local Linux machine
-  hosts: localhost
-  connection: local
+  hosts: ubuntu
+  #connection: local
   gather_facts: true
-  become: false
+  become: true
 
   vars:
     lab_directory: /tmp/ansible-local-lab

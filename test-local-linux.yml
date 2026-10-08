@@ -1,0 +1,38 @@
+---
+- name: Test Ansible on the local Linux machine
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: false
+
+  vars:
+    lab_directory: /tmp/ansible-local-lab
+
+  tasks:
+    - name: Display local Linux information
+      ansible.builtin.debug:
+        msg:
+          - "Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Kernel: {{ ansible_kernel }}"
+          - "Architecture: {{ ansible_architecture }}"
+          - "Python: {{ ansible_python_version }}"
+
+    - name: Create a dedicated test directory
+      ansible.builtin.file:
+        path: "{{ lab_directory }}"
+        state: directory
+        mode: "0750"
+
+    - name: Write a test file with gathered facts
+      ansible.builtin.copy:
+        dest: "{{ lab_directory }}/result.txt"
+        content: |
+          Ansible local test completed.
+          Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Kernel: {{ ansible_kernel }}
+          Architecture: {{ ansible_architecture }}
+        mode: "0640"
+
+    - name: Confirm where the test result was written
+      ansible.builtin.debug:
+        msg: "Test result: {{ lab_directory }}/result.txt"
